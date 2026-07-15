@@ -1,11 +1,13 @@
 Checks: >
+  clang-analyzer-*,
   bugprone-*,
   portability-*,
   performance-*,
-  clang-analyzer-*,
-  -clang-analyzer-core.FixedAddressDereference,
-  -readability-uppercase-literal-suffix
+  -bugprone-reserved-identifier,
+  -clang-analyzer-core.FixedAddressDereference
 
 WarningsAsErrors: ''
-HeaderFilterRegex: '.*'
+
+HeaderFilterRegex: '^(app|drivers|firmware|diagnostics)/'
+
 FormatStyle: none
