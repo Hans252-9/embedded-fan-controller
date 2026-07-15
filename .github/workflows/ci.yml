@@ -77,3 +77,14 @@ jobs:
             --std=c11 \
             --suppress=missingIncludeSystem \
             app drivers firmware diagnostics
+  
+  package:
+    needs:
+      - build
+      - static-analysis
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Package completed
+        run: echo "Build and static analysis passed."
