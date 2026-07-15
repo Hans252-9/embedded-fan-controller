@@ -105,13 +105,37 @@ jobs:
         run: |
           run-clang-tidy \
             -p build-clang-tidy \
-            '^(app|drivers|firmware|diagnostics)/.*\.c$'  
-      
+            '^(app|drivers|firmware|diagnostics)/.*\.c$' 
+             
+  unit-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure host unit tests
+        run: |
+          cmake -S tests \
+            -B build-tests \
+            -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build host unit tests
+        run: |
+          cmake --build build-tests --verbose
+
+      - name: Run unit tests
+        run: |
+          ctest \
+            --test-dir build-tests \
+            --output-on-failure
+
   package:
     needs:
       - build
       - static-analysis
       - clang-tidy
+      - unit-tests
 
     runs-on: ubuntu-latest
 

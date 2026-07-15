@@ -5,14 +5,13 @@
 #include "../drivers/gpio.h"
 #include "../drivers/pwm.h"
 
-#include <stdint.h>
-
-static uint8_t duty_for_temperature(int16_t temperature_c)
+uint8_t fan_controller_calculate_duty(int16_t temperature_c)
 {
     if (temperature_c < 30) {
         return 20u;
     }
-    if (temperature_c > 50) {
+
+    if (temperature_c >= 50) {
         return 100u;
     }
 
@@ -33,7 +32,7 @@ void fan_controller_init(void)
 void fan_controller_update(void)
 {
     const int16_t temperature_c = adc_read_temperature();
-    const uint8_t duty = duty_for_temperature(temperature_c);
+    const uint8_t duty = fan_controller_calculate_duty(temperature_c);
 
     pwm_set_duty(duty);
 }
