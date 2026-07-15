@@ -37,3 +37,14 @@ jobs:
 
       - name: Build firmware
         run: cmake --build build --verbose
+
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-${{ env.BUILD_TYPE }}
+          path: |
+            build/**/*.elf
+            build/**/*.bin
+            build/**/*.hex
+            build/**/*.map
+          if-no-files-found: error
