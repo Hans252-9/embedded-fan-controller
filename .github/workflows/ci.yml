@@ -57,7 +57,7 @@ jobs:
             build-${{ matrix.build_type }}/main.map
           if-no-files-found: error
 
-  static-analysis:
+  cppcheck:
     runs-on: ubuntu-latest
 
     steps:
@@ -131,14 +131,38 @@ jobs:
             --output-on-failure
 
   package:
-    needs:
-      - build
-      - static-analysis
-      - clang-tidy
-      - unit-tests
+   needs:
+    - build
+    - cppcheck
+    - clang-tidy
+    - unit-tests
 
-    runs-on: ubuntu-latest
+   runs-on: ubuntu-latest
 
-    steps:
-      - name: Package completed
-        run: echo "Build and static analysis passed."
+   steps:
+    - name: Download Debug firmware
+      uses: actions/download-artifact@v4
+      with:
+        name: firmware-Debug
+        path: release/Debug
+
+    - name: Download Release firmware
+      uses: actions/download-artifact@v4
+      with:
+        name: firmware-Release
+        path: release/Release
+
+    - name: Show package contents
+      run: |
+        ls -R release
+
+    - name: Create release ZIP
+      run: |
+        cd release
+        zip -r firmware-package.zip .
+
+    - name: Upload final package
+      uses: actions/upload-artifact@v4
+      with:
+        name: firmware-package
+        path: release/firmware-package.zip
