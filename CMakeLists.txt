@@ -8,6 +8,8 @@ endif()
 
 project(TEST_10 LANGUAGES C)
 
+set(CMAKE_EXECUTABLE_SUFFIX ".elf")
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_library(project_features INTERFACE)
