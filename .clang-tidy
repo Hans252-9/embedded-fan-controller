@@ -1,0 +1,11 @@
+Checks: >
+  bugprone-*,
+  portability-*,
+  performance-*,
+  clang-analyzer-*,
+  -clang-analyzer-core.FixedAddressDereference,
+  -readability-uppercase-literal-suffix
+
+WarningsAsErrors: ''
+HeaderFilterRegex: '.*'
+FormatStyle: none
