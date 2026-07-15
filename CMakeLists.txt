@@ -27,8 +27,6 @@ add_library(project_config INTERFACE)
 target_compile_options(project_config INTERFACE
         -mcpu=cortex-m4
         -mthumb
-        -Og -g
-        -O2
         )
 
 target_compile_definitions(project_config INTERFACE
