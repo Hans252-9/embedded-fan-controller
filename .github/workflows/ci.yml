@@ -56,3 +56,24 @@ jobs:
             build-${{ matrix.build_type }}/main.hex
             build-${{ matrix.build_type }}/main.map
           if-no-files-found: error
+
+  static-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install cppcheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cppcheck
+
+      - name: Run cppcheck
+        run: |
+          cppcheck \
+            --enable=warning,style,performance,portability \
+            --error-exitcode=1 \
+            --std=c11 \
+            --suppress=missingIncludeSystem \
+            app drivers firmware diagnostics
