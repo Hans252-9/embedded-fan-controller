@@ -6,12 +6,13 @@ on:
   pull_request:
     branches: ["main"]
 
-env:
-  BUILD_TYPE: Debug
-
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
 
     steps:
       - name: Checkout repository
@@ -33,7 +34,7 @@ jobs:
           cmake -S . -B build \
             -G Ninja \
             -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-none-eabi.cmake \
-            -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
 
       - name: Build firmware
         run: cmake --build build --verbose
@@ -41,10 +42,10 @@ jobs:
       - name: Upload firmware artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: firmware-${{ env.BUILD_TYPE }}
+          name: firmware-${{ matrix.build_type }}
           path: |
-            build/**/*.elf
-            build/**/*.bin
-            build/**/*.hex
-            build/**/*.map
+            build-${{ matrix.build_type }}/main.elf
+            build-${{ matrix.build_type }}/main.bin
+            build-${{ matrix.build_type }}/main.hex
+            build-${{ matrix.build_type }}/main.map
           if-no-files-found: error
