@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         build_type: [Debug, Release]
 
@@ -31,13 +32,15 @@ jobs:
 
       - name: Configure CMake
         run: |
-          cmake -S . -B build \
+          cmake -S . \
+            -B build-${{ matrix.build_type }} \
             -G Ninja \
             -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-none-eabi.cmake \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
 
       - name: Build firmware
-        run: cmake --build build --verbose
+        run: |
+          cmake --build build-${{ matrix.build_type }} --verbose
 
       - name: Upload firmware artifacts
         uses: actions/upload-artifact@v4
