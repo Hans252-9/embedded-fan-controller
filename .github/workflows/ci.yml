@@ -42,6 +42,10 @@ jobs:
         run: |
           cmake --build build-${{ matrix.build_type }} --verbose
 
+      - name: Show firmware size
+        run: |
+          arm-none-eabi-size build-${{ matrix.build_type }}/main.elf
+
       - name: Upload firmware artifacts
         uses: actions/upload-artifact@v4
         with:
